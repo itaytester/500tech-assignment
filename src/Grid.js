@@ -1,40 +1,30 @@
 import React from "react";
 
-const Grid = ({ config, data }) => {
-
-  const renderHeaders = () => {
-    return config.map((field) => <th>{field.title}</th>);
-  };
-
-  const renderRows = () => {
-    return data.map((obj) => {
-      return <tr>{renderObjInRow(obj)}</tr>;
-    });
-  };
-
-  const renderObjInRow = (obj) => {
-    return config.map((field) => {
-      if (field.hasOwnProperty("component")) {
-        const Component = field.component;
-        return (
-          <td>
-            <Component data={obj[field.field]} />
-          </td>
-        );
-      } else {
-        return <td>{obj[field.field]}</td>;
-      }
-    });
-  };
-
-  return (
-    <table>
-      <thead>
-        <tr>{renderHeaders()}</tr>
-      </thead>
-      <tbody>{renderRows()}</tbody>
-    </table>
-  );
-};
+const Grid = ({ config, data }) => (
+  <table>
+    <thead>
+      <tr>
+        {config.map((configObj) => (
+          <th key={configObj.field}>{configObj.title}</th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {data.map((obj) => (
+        <tr key={obj[config[0].field]}>
+          {config.map((configObj) =>
+            configObj.component ? (
+              <td key={configObj.field}>
+                <configObj.component data={obj[configObj.field]} />
+              </td>
+            ) : (
+              <td key={configObj.field}>{obj[configObj.field]}</td>
+            )
+          )}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+);
 
 export default Grid;
